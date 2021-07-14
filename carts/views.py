@@ -17,11 +17,12 @@ from products.models   import Product, ProductEfficacy, ProductSummary, Efficacy
 from .models           import Cart
 
 class CartView(View):
-    @check_login
+    # @check_login
     def post(self, request):
         try:             
             data                    = json.loads(request.body)
-            user                    = request.user
+            # user                    = request.user
+            user         = User.objects.get(id=2)
             product                 = Product.objects.get(id=data['productID'])
             cart_object, cart_exist = Cart.objects.get_or_create(user_id=user.id, product_id=product.id)
 
@@ -39,10 +40,11 @@ class CartView(View):
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
 
-    @check_login
+    # @check_login
     def get(self, request):
         try: 
-            user  = request.user
+            # user  = request.user
+            user         = User.objects.get(id=2)
             carts = Cart.objects.filter(user_id=user.id)
 
             results = [{
@@ -63,11 +65,12 @@ class CartView(View):
         except ValueError:
             return JsonResponse({"message":"VALUE_ERROR"},status=400)
 
-    @check_login
+    # @check_login
     def patch(self, request):
         try: 
             data = json.loads(request.body)
-            user = request.user
+            # user = request.user
+            user         = User.objects.get(id=2)
             cart = Cart.objects.get(product_id=data["productID"], user=user)
             cart.update(quantity = data["quantity"])
             return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
@@ -81,9 +84,8 @@ class CartView(View):
         except TypeError:
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
-class CartDeleteView(View):
     @check_login
-    def delete(self, request, product_id):
+    def delete(self, request):
         try: 
             item = request.GET.getlist('item',None)
             q_object = Q()

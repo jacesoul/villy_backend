@@ -2,11 +2,14 @@ import json
 import bcrypt
 import jwt
 import uuid
-from datetime          import datetime
+from datetime import datetime
 
-from django.http       import JsonResponse
-from django.views      import View
-from django.db.models  import Q
+from django.http            import JsonResponse
+from django.views           import View
+from django.db.models       import Q
+from django.db              import transaction
+from django.core.exceptions import ObjectDoesNotExist
+
 
 from core.models       import TimeStampModel
 from core.views        import check_login
@@ -18,6 +21,38 @@ from .models           import OrderStatus, OrderListStatus, Shipment, Order, Ord
 
 class OrderView(View):
     @check_login
+    def get(self, request):
+        try: 
+            user = request.user
+            orders = Order.objects.filter(user=user) 
+            results = [{
+                "orderID"    : order.id,
+                "orderStatus": order.order_status.status,
+                "orderNumber": order.order_number,
+                "orderItem"  : [{
+                    "productID"          : order_item.product.id,
+                    "productName"        : order_item.product.name,
+                    "quantity"           : order_item.quantity,
+                    "thumbnail_image_url": order_item.product.thumbnail_image_url,
+                    "productPrice"       : order_item.product.price,
+                    "shipmentName"       : order_item.shipment.company,
+                    "shipmentNumber"     : order_item.shipment.tracking_number,
+                    "orderItemStatus"    : order_item.order_list_status.status,
+                    } for order_item in OrderItem.objects.filter(order=order)]
+            }for order in orders]
+
+            point = Point.objects.get(user=user).point
+            return JsonResponse({"product":results,"point":point},status=200)
+
+        except ObjectDoesNotExist:
+            return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
+        except TypeError:
+            return JsonResponse({"message":"TYPE_ERROR"},status=400)
+        except ValueError:
+            return JsonResponse({"message":"VALUE_ERROR"},status=400)
+
+    @check_login
+    @transaction.atomic
     def post(self, request):
         try: 
             data         = json.loads(request.body)
