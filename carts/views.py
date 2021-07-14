@@ -63,12 +63,11 @@ class CartView(View):
         except ValueError:
             return JsonResponse({"message":"VALUE_ERROR"},status=400)
 
-    # @check_login
+    @check_login
     def patch(self, request):
         try: 
             data = json.loads(request.body)
-            # user = request.user
-            user         = User.objects.get(id=2)
+            user = request.user
             cart = Cart.objects.get(product_id=data["productID"], user=user)
             cart.update(quantity = data["quantity"])
             return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
