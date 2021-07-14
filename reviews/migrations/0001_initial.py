@@ -10,18 +10,22 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('products', '0001_initial'),
+        ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Cart',
+            name='Review',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('content', models.TextField()),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user')),
             ],
             options={
-                'db_table': 'carts',
+                'db_table': 'reviews',
             },
         ),
     ]

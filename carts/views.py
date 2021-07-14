@@ -44,7 +44,6 @@ class CartView(View):
         try: 
             user  = request.user
             carts = Cart.objects.filter(user_id=user.id)
-
             results = [{
                 "productID"        : cart.product.id,
                 "productName"        : cart.product.name,
@@ -68,8 +67,7 @@ class CartView(View):
         try: 
             data = json.loads(request.body)
             user = request.user
-            cart = Cart.objects.get(product_id=data["productID"], user=user)
-            cart.update(quantity = data["quantity"])
+            Cart.objects.filter(product_id=data["productID"], user=user).update(quantity = data["quantity"])
             return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
             
         except ObjectDoesNotExist:
