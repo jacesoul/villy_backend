@@ -1,7 +1,7 @@
 import json
 import bcrypt
 import jwt
-from datetime          import datetime
+from datetime import datetime
 
 from django.http            import JsonResponse
 from django.views           import View
@@ -17,12 +17,11 @@ from products.models   import Product, ProductEfficacy, ProductSummary, Efficacy
 from .models           import Cart
 
 class CartView(View):
-    # @check_login
+    @check_login
     def post(self, request):
         try:             
             data                    = json.loads(request.body)
-            # user                    = request.user
-            user         = User.objects.get(id=2)
+            user                    = request.user
             product                 = Product.objects.get(id=data['productID'])
             cart_object, cart_exist = Cart.objects.get_or_create(user_id=user.id, product_id=product.id)
 
@@ -40,11 +39,10 @@ class CartView(View):
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
 
-    # @check_login
+    @check_login
     def get(self, request):
         try: 
-            # user  = request.user
-            user         = User.objects.get(id=2)
+            user  = request.user
             carts = Cart.objects.filter(user_id=user.id)
 
             results = [{
