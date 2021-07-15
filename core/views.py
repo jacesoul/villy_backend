@@ -16,7 +16,7 @@ def check_login(func):
             return func(self, request, *args, **kwargs)
         
         except jwt.DecodeError:
-            return JsonResponse({'message': 'INVAILD_USER'}, status=400)
+            return JsonResponse({'message': 'INVAILD_USER'}, status=401)
 
     return wrapper
 
@@ -36,6 +36,6 @@ def check_login_or_not(func):
                 return func(self, request, *args, **kwargs)
         
         except jwt.DecodeError:
-            return JsonResponse({'message': 'INVAILD_USER'}, status=400)
+            return JsonResponse({'message': 'INVAILD_USER'}, status=401)
 
     return wrapper
