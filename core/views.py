@@ -21,21 +21,21 @@ def check_login(func):
     return wrapper
 
 
-def check_login_or_not(func):
-    def wrapper(self, request, *args, **kwargs):
-        try:
-            if request.headers.get('Authorization',None):
-                access_token = request.headers.get('Authorization')
-                payload      = jwt.decode(access_token, SECRET_KEY, ALGORITHM)
-                user         = User.objects.get(id = payload['id'])
-                request.user = user
+# def check_login_or_not(func):
+#     def wrapper(self, request, *args, **kwargs):
+#         try:
+#             if request.headers.get('Authorization',None):
+#                 access_token = request.headers.get('Authorization')
+#                 payload      = jwt.decode(access_token, SECRET_KEY, ALGORITHM)
+#                 user         = User.objects.get(id = payload['id'])
+#                 request.user = user
 
-                return func(self, request, *args, **kwargs)
-            else: 
-                request.user = None
-                return func(self, request, *args, **kwargs)
+#                 return func(self, request, *args, **kwargs)
+#             else: 
+#                 request.user = None
+#                 return func(self, request, *args, **kwargs)
         
-        except jwt.DecodeError:
-            return JsonResponse({'message': 'INVAILD_USER'}, status=401)
+#         except jwt.DecodeError:
+#             return JsonResponse({'message': 'INVAILD_USER'}, status=401)
 
-    return wrapper
+#     return wrapper
