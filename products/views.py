@@ -67,7 +67,7 @@ class ProductsDetailsView(View):
             if request.user:
                 user = request.user
                 product = Product.objects.get(id=product_id)
-                cart_exist = Cart.objects.filter(product_id=product.id, use=user)
+                cart_exist = Cart.objects.filter(product_id=product.id, user=user)
                 
                 results = [{
                         "productID"          : product.id,
