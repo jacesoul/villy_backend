@@ -25,6 +25,7 @@ class OrderView(View):
     @transaction.atomic
     def post(self, request):
         try: 
+            
             data         = json.loads(request.body)
             user         = request.user
             point        = user.point_set.get(user=user).point
