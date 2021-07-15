@@ -94,7 +94,7 @@ class OrderView(View):
                     } for order_item in OrderItem.objects.filter(order=order)]
             }for order in orders]
 
-            point = Point.objects.get(user=user).point
+            point = int(Point.objects.get(user=user).point)
             return JsonResponse({"product":results,"point":point},status=200)
 
         except ObjectDoesNotExist:
