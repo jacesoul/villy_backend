@@ -27,10 +27,10 @@ class OrderView(View):
         try: 
             data         = json.loads(request.body)
             user         = request.user
-            point        = user.point_set.get(id=1).point
+            point        = user.point_set.get(user=user).point
 
             all_product_list = data['products']
-            id_quantity  = {value["product_id"]:value["quantity"] for (key,value) in all_product_list.items()}
+            id_quantity  = {value["productID"]:value["quantity"] for (key,value) in all_product_list.items()}
             total_price  = 0
             
             for product_id, quantity in id_quantity.items():

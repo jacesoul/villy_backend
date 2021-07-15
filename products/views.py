@@ -4,13 +4,16 @@ from django.http      import JsonResponse
 from django.views     import View
 from django.db.models import Q
 
+from core.views        import check_login
+
 from datetime       import datetime
 from .models        import Product, Efficacy, ProductEfficacy, ProductSummary
 from carts.models   import Cart
 
+
 class ProductsView(View):
     def get(self, request):
-        try:          
+        try:        
             efficacy = request.GET.getlist('efficacy',None)
             q_object = Q()
             if efficacy:
