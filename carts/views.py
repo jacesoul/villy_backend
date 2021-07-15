@@ -38,7 +38,6 @@ class CartView(View):
         except TypeError:
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
-
     @check_login
     def get(self, request):
         try: 
@@ -98,7 +97,6 @@ class CartView(View):
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
         except ValueError:
             return JsonResponse({"message":"VALUE_ERROR"},status=400)
-
 
 class CartDeleteView(View):
     @check_login
