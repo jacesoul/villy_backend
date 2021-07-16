@@ -20,20 +20,16 @@ from carts.models      import Cart
 from orders.models     import OrderStatus, OrderListStatus, Shipment, Order, OrderItem
 
 class OrderView(View):
-
     @check_login
     @transaction.atomic
     def post(self, request):
-        try: 
-            
+        try:             
             data         = json.loads(request.body)
             user         = request.user
             point        = user.point_set.get(user=user).point
-
             all_product_list = data['products']
             id_quantity  = {value["productID"]:value["quantity"] for (key,value) in all_product_list.items()}
             total_price  = 0
-            
             for product_id, quantity in id_quantity.items():
                 product_price  = Product.objects.get(id=product_id).price
                 total_price   += int(quantity)*int(product_price)
